@@ -39,6 +39,9 @@ if ( function_exists('register_sidebar') ) {
 	register_sidebar(array(
 		'before_widget' => '<section>',
 		'after_widget' => '</section>',
+		'id'            => 'right',
+		'name'        => __( 'Нижний левый' ),
+		'description' => __( 'Сайдбар в нижней части сайта.' ),
 		'before_title' => '<h2 class="widgettitle">',
 		'after_title' => '</h2>',
 	));
@@ -234,6 +237,16 @@ function os_force_get_img($post_ID,$size='large',$attr=''){
 	if(has_post_thumbnail($post_ID) ){
 		$out=get_the_post_thumbnail( $post_ID, $size, $attr );
 	} else {
+
+		if(is_array($attr)){ // TODO
+			$out='';
+			foreach ($attr as $key => $value) {
+				if($key=='class')
+					$out.=' '.$value;
+			}
+			$attr=$out;
+		} // TODO //
+
 		$attachments = get_posts( array(
 			'post_type' => 'attachment',
 			'posts_per_page' => 1,
