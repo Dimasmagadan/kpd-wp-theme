@@ -178,7 +178,7 @@ function os_twitter($args){
 	    else
 	    foreach ( $rss_items as $item ) :
 		?><div class="tweeter">
-	<p class="tweet"><?php echo esc_html( $item->get_description() ); ?></p>
+	<p class="tweet"><?php echo str_replace($name, '<span class="tweetauthor">'.$name.'</span>', esc_html( $item->get_description() ) ); ?></p>
 	<span class="footer-small italic link"><?php echo $item->get_date('j.m.Y'); ?></span>
 	</div><?php
 		endforeach;
