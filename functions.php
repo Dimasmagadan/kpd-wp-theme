@@ -71,6 +71,14 @@ if ( ! isset( $content_width ) )
 
 add_theme_support( 'automatic-feed-links' );
 add_theme_support( 'post-thumbnails' );
+
+/* delete unneeded sizes */
+update_option( 'thumbnail_size_h', 0 );
+update_option( 'thumbnail_size_w', 0 );
+update_option( 'medium_size_h', 0 );
+update_option( 'medium_size_w', 0 );
+update_option( 'large_size_h', 0 );
+update_option( 'large_size_w', 0 );
 // add_image_size( 'preview', 190, 140);
 // add_image_size( 'long', 850, 9999);
 
