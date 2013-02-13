@@ -5,6 +5,12 @@
  */
 
 
+// dev only
+define('DISALLOW_FILE_EDIT', true);
+
+// Remove the version number of WP
+// Warning - this info is also available in the readme.html file in your root directory - delete this file!
+remove_action('wp_head', 'wp_generator');
 
 
 // Custom HTML5 Comment Markup
@@ -19,7 +25,7 @@ function mytheme_comment($comment, $args, $depth) {
 	<?php edit_comment_link(__('(Edit)'),'  ','') ?>
 	</header>
 	<?php if ($comment->comment_approved == '0') : ?>
-	<em><?php _e('Your comment is awaiting moderation.') ?></em>
+	<em><?php _e('Ваш комментарий ожидает проверки модератора.') ?></em>
 	<br />
 	<?php endif; ?>
 
@@ -40,6 +46,15 @@ if ( function_exists('register_sidebar') ) {
 		'before_widget' => '<section>',
 		'after_widget' => '</section>',
 		'id'            => 'right',
+		'name'        => __( 'Правый сайдбар' ),
+		'description' => __( 'Сайдбар в правой части сайта.' ),
+		'before_title' => '<h2 class="widgettitle">',
+		'after_title' => '</h2>',
+	));
+	register_sidebar(array(
+		'before_widget' => '<section>',
+		'after_widget' => '</section>',
+		'id'            => 'bottom',
 		'name'        => __( 'Нижний левый' ),
 		'description' => __( 'Сайдбар в нижней части сайта.' ),
 		'before_title' => '<h2 class="widgettitle">',
@@ -47,31 +62,49 @@ if ( function_exists('register_sidebar') ) {
 	));
 }
 
-// $GLOBALS["TEMPLATE_URL"] = get_bloginfo('template_url')."/";
-// $GLOBALS["TEMPLATE_RELATIVE_URL"] = wp_make_link_relative($GLOBALS["TEMPLATE_URL"]);
-// function versioned_stylesheet($relative_url, $add_attributes=""){
-// 	echo '<link rel="stylesheet" href="'.versioned_resource($relative_url).'" '.$add_attributes.'>'."\n";
-// }
-// function versioned_javascript($relative_url, $add_attributes=""){
-// 	echo '<script src="'.versioned_resource($relative_url).'" '.$add_attributes.'></script>'."\n";
-// }
-// function versioned_resource($relative_url){
-// 	$file = $_SERVER["DOCUMENT_ROOT"].$relative_url;
-// 	$file_version = "";
-
-// 	if(file_exists($file)) {
-// 		$file_version = "?v=".filemtime($file);
-// 	}
-
-// 	return $relative_url.$file_version;
-// }
 
 if ( ! isset( $content_width ) )
 	$content_width = 850; /* pixels */
 
+
+/* Enable admin to set custom background and header image */
+$defaults = array(
+	// 'default-color'			=> '',
+	'default-image'				=> get_template_directory_uri().'/img/kindajean.png',
+	// 'wp-head-callback'		=> '_custom_background_cb',
+	// 'admin-head-callback'	=> '',
+	// 'admin-preview-callback'	=> ''
+);
+add_theme_support( 'custom-background', $defaults );
+$defaults = array(
+	'default-image'				=> get_template_directory_uri().'/img/escheresque_ste.png',
+	// 'random-default'			=> false,
+	'width'						=> 46,
+	'height'					=> 46,
+	// 'flex-height'			=> false,
+	// 'flex-width'				=> false,
+	// 'default-text-color'		=> '',
+	// 'header-text'			=> true,
+	'uploads'					=> true,
+	// 'wp-head-callback'		=> '',
+	// 'admin-head-callback'	=> '',
+	// 'admin-preview-callback'	=> '',
+);
+add_theme_support( 'custom-header', $defaults );
+function os_custom_header(){
+	$out='';
+	$header_image=header_image();
+	if($header_image){
+		$out='<style>header{background-image:url("'.$header_image.'");background-repeat:repeat}</style>';
+	}
+	return $out;
+}
+add_action( 'wp_enqueue_scripts', 'os_custom_header', 20 );
+
+
+/* images and sizes */
 add_theme_support( 'automatic-feed-links' );
 add_theme_support( 'post-thumbnails' );
-
 /* delete unneeded sizes */
 update_option( 'thumbnail_size_h', 0 );
 update_option( 'thumbnail_size_w', 0 );
@@ -81,6 +114,14 @@ update_option( 'large_size_h', 0 );
 update_option( 'large_size_w', 0 );
 // add_image_size( 'preview', 190, 140);
 // add_image_size( 'long', 850, 9999);
+
+// for responsive themes
+function remove_thumbnail_dimensions( $html ) {
+	$html = preg_replace( '/(width|height)=\"\d*\"\s/', "", $html );
+	return $html;
+}
+
+
 
 register_nav_menus( array(
 	'header' => __( 'Основное меню', 'header' ),
@@ -106,6 +147,13 @@ function styles_and_scripts() {
 	}
 }
 add_action( 'wp_enqueue_scripts', 'styles_and_scripts' );
+
+// Custom CSS for the whole admin area uses wp-admin.css from theme folder
+function wpfme_adminCSS() {
+	echo '<link rel="stylesheet" type="text/css" href="'.get_template_directory_uri().'/css/wp-admin.css"/>';
+}
+// add_action('admin_head', 'wpfme_adminCSS');
+
 
 
 
@@ -183,8 +231,8 @@ function os_twitter($args){
 		endif;
 
 		if (!isset($maxitems) || $maxitems == 0) echo 'Нет данных';
-	    else
-	    foreach ( $rss_items as $item ) :
+		else
+		foreach ( $rss_items as $item ) :
 		?><div class="tweeter">
 	<p class="tweet"><?php echo str_replace($name, '<span class="tweetauthor">'.$name.'</span>', esc_html( $item->get_description() ) ); ?></p>
 	<span class="footer-small italic link"><?php echo $item->get_date('j.m.Y'); ?></span>
@@ -214,13 +262,8 @@ function os_twi_control() {
 
 
 
-/* rare */
 
 
-function remove_thumbnail_dimensions( $html ) {
-	$html = preg_replace( '/(width|height)=\"\d*\"\s/', "", $html );
-	return $html;
-}
 
 
 function os_first_attachment_src($post_ID,$size='large',$attr=''){
@@ -276,3 +319,19 @@ function os_force_get_img($post_ID,$size='large',$attr=''){
 
 	return $out;
 }
+
+/* --------------- editor's stuff --------------- */
+// Test text placeholder for post/page edit screen.
+function wpfme_writing_encouragement( $content ) {
+	global $post_type;
+	if($post_type == "post"){
+		include( TEMPLATEPATH . 'editor-text.php' );
+		return $text;
+	}
+}
+add_filter( 'default_content', 'wpfme_writing_encouragement' );
+
+
+
+
+
