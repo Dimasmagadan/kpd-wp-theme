@@ -4,14 +4,49 @@
  * @subpackage HTML5_Boilerplate
  */
 
+// перед запуском в продакшн заменить $ver=time() у стилей!!!
 
-// dev only
-define('DISALLOW_FILE_EDIT', true);
+// Максимальная ширина контента в пикселях
+$defaults['size']=850;
+// логотип по умолчанию
+$defaults['logo']='kindajean.png';
+// фон шапки по умолчанию
+$defaults['back']='kindajean.png';
+// картинка-заглушка по умолчанию
+$defaults['img']='http://fpoimg.com/100x100';
 
-// Remove the version number of WP
-// Warning - this info is also available in the readme.html file in your root directory - delete this file!
+
+
+
+// delete readme.html file in your root directory
 remove_action('wp_head', 'wp_generator');
 
+add_theme_support( 'automatic-feed-links' );
+add_theme_support( 'post-thumbnails' );
+
+/* удаляем стандартные размеры, добавляем свои */
+update_option( 'thumbnail_size_h', 0 );
+update_option( 'thumbnail_size_w', 0 );
+update_option( 'medium_size_h', 0 );
+update_option( 'medium_size_w', 0 );
+update_option( 'large_size_h', 0 );
+update_option( 'large_size_w', 0 );
+// add_image_size( 'preview', 190, 140);
+// add_image_size( 'long', 850, 9999);
+
+// for responsive themes, если испольуется - дописать в стилях максимально возможные размеры для всех размеров картинок ('preview, medium, etc')
+function os_remove_thumbnail_dimensions( $html ) {
+	$html = preg_replace( '/(width|height)=\"\d*\"\s/', "", $html );
+	return $html;
+}
+// add_filter( 'post_thumbnail_html', 'os_remove_thumbnail_dimensions', 10, 3 );
+
+
+if ( ! isset( $content_width ) )
+	$content_width = $defaults['size'];
+
+/* добавляем свою админку */
+include_once get_template_directory().'/kpd/kpd-options.php';
 
 // Custom HTML5 Comment Markup
 function mytheme_comment($comment, $args, $depth) {
@@ -35,7 +70,7 @@ function mytheme_comment($comment, $args, $depth) {
 		<?php comment_reply_link(array_merge( $args, array('depth' => $depth, 'max_depth' => $args['max_depth']))) ?>
 	</nav>
 	</article>
-	<!-- </li> is added by wordpress automatically -->
+	<!-- </li> добавится автоматом -->
 <?php
 }
 
@@ -63,21 +98,18 @@ if ( function_exists('register_sidebar') ) {
 }
 
 
-if ( ! isset( $content_width ) )
-	$content_width = 850; /* pixels */
 
 
-/* Enable admin to set custom background and header image */
 $defaults = array(
 	// 'default-color'			=> '',
-	'default-image'				=> get_template_directory_uri().'/img/kindajean.png',
+	'default-image'				=> get_template_directory_uri().'/img/'.$defaults['logo'],
 	// 'wp-head-callback'		=> '_custom_background_cb',
 	// 'admin-head-callback'	=> '',
 	// 'admin-preview-callback'	=> ''
 );
 add_theme_support( 'custom-background', $defaults );
 $defaults = array(
-	'default-image'				=> get_template_directory_uri().'/img/escheresque_ste.png',
+	'default-image'				=> get_template_directory_uri().'/img/'.$defaults['back'],
 	// 'random-default'			=> false,
 	'width'						=> 46,
 	'height'					=> 46,
@@ -101,39 +133,18 @@ function os_custom_header(){
 }
 add_action( 'wp_enqueue_scripts', 'os_custom_header', 20 );
 
-
-/* images and sizes */
-add_theme_support( 'automatic-feed-links' );
-add_theme_support( 'post-thumbnails' );
-/* delete unneeded sizes */
-update_option( 'thumbnail_size_h', 0 );
-update_option( 'thumbnail_size_w', 0 );
-update_option( 'medium_size_h', 0 );
-update_option( 'medium_size_w', 0 );
-update_option( 'large_size_h', 0 );
-update_option( 'large_size_w', 0 );
-// add_image_size( 'preview', 190, 140);
-// add_image_size( 'long', 850, 9999);
-
-// for responsive themes
-function remove_thumbnail_dimensions( $html ) {
-	$html = preg_replace( '/(width|height)=\"\d*\"\s/', "", $html );
-	return $html;
-}
-
-
-
 register_nav_menus( array(
 	'header' => __( 'Основное меню', 'header' ),
 	'footer' => __( 'Нижнее меню', 'footer' ),
 ) );
 
 
-function styles_and_scripts() {
+function os_styles_and_scripts() {
+	// заменить на версию темы перед запуском
 	$ver=time(); //dev!!!
 
 	if(!is_admin()){
-		// normalize & boilerplate css
+		// фреймворки можно без версии
 		wp_enqueue_style( 'normalize', get_template_directory_uri().'/css/normalize.min.css' );
 		wp_enqueue_style( 'main', get_template_directory_uri().'/css/main.css' );
 
@@ -146,14 +157,13 @@ function styles_and_scripts() {
 		wp_localize_script('main','os',array('ajaxurl'=>admin_url('admin-ajax.php'),'base'=>site_url() ));
 	}
 }
-add_action( 'wp_enqueue_scripts', 'styles_and_scripts' );
+add_action( 'wp_enqueue_scripts', 'os_styles_and_scripts' );
 
-// Custom CSS for the whole admin area uses wp-admin.css from theme folder
-function wpfme_adminCSS() {
+// стили для админки.
+function os_adminCSS() {
 	echo '<link rel="stylesheet" type="text/css" href="'.get_template_directory_uri().'/css/wp-admin.css"/>';
 }
-// add_action('admin_head', 'wpfme_adminCSS');
-
+// add_action('admin_head', 'os_adminCSS');
 
 
 
@@ -309,9 +319,7 @@ function os_force_get_img($post_ID,$size='large',$attr=''){
 			$img = wp_get_attachment_image_src( $attachments['0']->ID, $size );
 			$out='<img alt="" src="'.$img[0].'" '.$attr.' />';
 		} else {
-			$width=get_option( $size.'_size_w' );
-			$height=get_option( $size.'_size_h' );
-			$dummy='<img alt="" src="http://fpoimg.com/'.$width.'x'.$height.'" '.$attr.' />';
+			$dummy='<img alt="" src="'.$defaults['img'].'" '.$attr.' />';
 
 			$out=$dummy;
 		}
@@ -321,17 +329,12 @@ function os_force_get_img($post_ID,$size='large',$attr=''){
 }
 
 /* --------------- editor's stuff --------------- */
-// Test text placeholder for post/page edit screen.
-function wpfme_writing_encouragement( $content ) {
+// Текст по умолчанию, для проверки верстки.
+function os_writing_encouragement( $content ) {
 	global $post_type;
 	if($post_type == "post"){
 		include( TEMPLATEPATH . 'editor-text.php' );
 		return $text;
 	}
 }
-add_filter( 'default_content', 'wpfme_writing_encouragement' );
-
-
-
-
-
+add_filter( 'default_content', 'os_writing_encouragement' );
