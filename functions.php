@@ -93,7 +93,7 @@ $defaults = array(
 add_theme_support( 'custom-header', $defaults );
 function os_custom_header(){
 	$out='';
-	$header_image=header_image();
+	$header_image=get_header_image();
 	if($header_image){
 		$out='<style>header{background-image:url("'.$header_image.'");background-repeat:repeat}</style>';
 	}
