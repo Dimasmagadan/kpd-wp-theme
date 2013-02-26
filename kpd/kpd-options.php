@@ -41,10 +41,10 @@ if( empty($kpd_options) || is_wp_error($kpd_options) ){
 	);
 }
 
-function kpd_theme_options_init() {
-	wp_enqueue_style( 'gazpo-theme-options-style', get_template_directory_uri() . '/settings/options.css' );
-}
-add_action( 'admin_init', 'kpd_theme_options_init' );
+// function kpd_theme_options_init() {
+// 	wp_enqueue_style( 'gazpo-theme-options-style', get_template_directory_uri() . '/kpd/options.css' );
+// }
+// add_action( 'admin_init', 'kpd_theme_options_init' );
 
 
 function kpd_validate_options( $input ) {

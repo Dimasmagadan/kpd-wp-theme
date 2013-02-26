@@ -46,7 +46,7 @@ if ( ! isset( $content_width ) )
 	$content_width = $defaults['size'];
 
 /* добавляем свою админку */
-include_once get_template_directory().'/kpd/kpd-options.php';
+include_once ( get_template_directory().'/kpd/kpd-options.php' );
 
 // Custom HTML5 Comment Markup
 function mytheme_comment($comment, $args, $depth) {
@@ -161,9 +161,10 @@ add_action( 'wp_enqueue_scripts', 'os_styles_and_scripts' );
 
 // стили для админки.
 function os_adminCSS() {
-	echo '<link rel="stylesheet" type="text/css" href="'.get_template_directory_uri().'/css/wp-admin.css"/>';
+	wp_enqueue_style( 'os_admin_style', get_template_directory_uri().'/css/wp-admin.css' );
+	// echo '<link rel="stylesheet" type="text/css" href="'.get_template_directory_uri().'/css/wp-admin.css"/>';
 }
-// add_action('admin_head', 'os_adminCSS');
+add_action('admin_head', 'os_adminCSS');
 
 
 
@@ -333,7 +334,7 @@ function os_force_get_img($post_ID,$size='large',$attr=''){
 function os_writing_encouragement( $content ) {
 	global $post_type;
 	if($post_type == "post"){
-		include( TEMPLATEPATH . 'editor-text.php' );
+		include( get_template_directory() . '/editor-text.php' );
 		return $text;
 	}
 }
