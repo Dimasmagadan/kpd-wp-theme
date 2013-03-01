@@ -4,16 +4,18 @@
  * @subpackage HTML5_Boilerplate
  */
 
+error_reporting(E_ALL); // dev
 // перед запуском в продакшн заменить $ver=time() у стилей!!!
 
+global $img_defaults;
 // Максимальная ширина контента в пикселях
-$defaults['size']=850;
+$img_defaults['size']=850;
 // логотип по умолчанию
-$defaults['logo']='kindajean.png';
+$img_defaults['logo']='kindajean.png';
 // фон шапки по умолчанию
-$defaults['back']='kindajean.png';
+$img_defaults['back']='kindajean.png';
 // картинка-заглушка по умолчанию
-$defaults['img']='http://fpoimg.com/100x100';
+$img_defaults['img']='http://fpoimg.com/100x100';
 
 
 
@@ -43,7 +45,7 @@ function os_remove_thumbnail_dimensions( $html ) {
 
 
 if ( ! isset( $content_width ) )
-	$content_width = $defaults['size'];
+	$content_width = $img_defaults['size'];
 
 /* добавляем свою админку */
 include_once ( get_template_directory().'/kpd/kpd-options.php' );
@@ -102,14 +104,14 @@ if ( function_exists('register_sidebar') ) {
 
 $defaults = array(
 	// 'default-color'			=> '',
-	'default-image'				=> get_template_directory_uri().'/img/'.$defaults['logo'],
+	'default-image'				=> get_template_directory_uri().'/img/'.$img_defaults['logo'],
 	// 'wp-head-callback'		=> '_custom_background_cb',
 	// 'admin-head-callback'	=> '',
 	// 'admin-preview-callback'	=> ''
 );
 add_theme_support( 'custom-background', $defaults );
 $defaults = array(
-	'default-image'				=> get_template_directory_uri().'/img/'.$defaults['back'],
+	'default-image'				=> get_template_directory_uri().'/img/'.$img_defaults['back'],
 	// 'random-default'			=> false,
 	'width'						=> 46,
 	'height'					=> 46,
@@ -320,7 +322,7 @@ function os_force_get_img($post_ID,$size='large',$attr=''){
 			$img = wp_get_attachment_image_src( $attachments['0']->ID, $size );
 			$out='<img alt="" src="'.$img[0].'" '.$attr.' />';
 		} else {
-			$dummy='<img alt="" src="'.$defaults['img'].'" '.$attr.' />';
+			$dummy='<img alt="" src="'.$img_defaults['img'].'" '.$attr.' />';
 
 			$out=$dummy;
 		}
