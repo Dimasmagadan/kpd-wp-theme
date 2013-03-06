@@ -26,6 +26,8 @@ remove_action('wp_head', 'wp_generator');
 add_theme_support( 'automatic-feed-links' );
 add_theme_support( 'post-thumbnails' );
 
+
+/* =================== картинки ==========================*/
 /* удаляем стандартные размеры, добавляем свои */
 update_option( 'thumbnail_size_h', 0 );
 update_option( 'thumbnail_size_w', 0 );
@@ -43,12 +45,31 @@ function os_remove_thumbnail_dimensions( $html ) {
 }
 // add_filter( 'post_thumbnail_html', 'os_remove_thumbnail_dimensions', 10, 3 );
 
+/* добавляем rel="lightbox" и меняем title все картинкам в посте */
+function os_add_lightboxrel($content) {
+       global $post;
+       $pattern ="/<a(.*?)href=('|\")(.*?).(bmp|gif|jpeg|jpg|png)('|\")(.*?)>/i";
+       $replacement = '<a$1href=$2$3.$4$5 rel="lightbox" title="'.$post->post_title.'"$6>';
+       $content = preg_replace($pattern, $replacement, $content);
+       return $content;
+}
+// add_filter('the_content', 'os_add_lightboxrel');
+
+
 
 if ( ! isset( $content_width ) )
 	$content_width = $img_defaults['size'];
 
 /* добавляем свою админку */
 include_once ( get_template_directory().'/kpd/kpd-options.php' );
+
+
+function os_enqueue_comments_reply() {
+	if( get_option( 'thread_comments' ) )  {
+		wp_enqueue_script( 'comment-reply' );
+	}
+}
+add_action( 'comment_form_before', 'os_enqueue_comments_reply' );
 
 // Custom HTML5 Comment Markup
 function mytheme_comment($comment, $args, $depth) {
@@ -104,14 +125,14 @@ if ( function_exists('register_sidebar') ) {
 
 $defaults = array(
 	// 'default-color'			=> '',
-	'default-image'				=> get_template_directory_uri().'/img/'.$img_defaults['logo'],
+	'default-image'				=> get_template_directory_uri().'/img/'.$img_defaults['back'],
 	// 'wp-head-callback'		=> '_custom_background_cb',
 	// 'admin-head-callback'	=> '',
 	// 'admin-preview-callback'	=> ''
 );
 add_theme_support( 'custom-background', $defaults );
 $defaults = array(
-	'default-image'				=> get_template_directory_uri().'/img/'.$img_defaults['back'],
+	'default-image'				=> get_template_directory_uri().'/img/'.$img_defaults['logo'],
 	// 'random-default'			=> false,
 	'width'						=> 46,
 	'height'					=> 46,
@@ -125,15 +146,7 @@ $defaults = array(
 	// 'admin-preview-callback'	=> '',
 );
 add_theme_support( 'custom-header', $defaults );
-function os_custom_header(){
-	$out='';
-	$header_image=get_header_image();
-	if($header_image){
-		$out='<style>header{background-image:url("'.$header_image.'");background-repeat:repeat}</style>';
-	}
-	return $out;
-}
-add_action( 'wp_enqueue_scripts', 'os_custom_header', 20 );
+
 
 register_nav_menus( array(
 	'header' => __( 'Основное меню', 'header' ),
@@ -171,12 +184,13 @@ add_action('admin_head', 'os_adminCSS');
 
 
 function register_widgets() {
-	wp_register_sidebar_widget('os_last','Последние записи', 'os_latest');
-	// wp_register_sidebar_widget('os_pop','Популярные записи', 'os_popular');
-	// wp_register_sidebar_widget('os_com','Обсуждаемые', 'os_commented');
+	wp_register_sidebar_widget('os_last','KPD Последние записи', 'os_latest');
 	
-	wp_register_sidebar_widget('os_twi','Твиттер', 'os_twitter');
-	wp_register_widget_control('os_twi','Твиттер', 'os_twi_control' );
+	wp_register_sidebar_widget('os_twi','KPD Твиттер', 'os_twitter');
+	wp_register_widget_control('os_twi','KPD Твиттер', 'os_twi_control');
+
+	wp_register_sidebar_widget('os_comments','KPD комментарии', 'os_comments');
+	wp_register_widget_control('os_comments','KPD комментарии', 'os_comments_control' );
 }
 add_action('init', 'register_widgets');
 
@@ -270,16 +284,62 @@ function os_twi_control() {
 	?><br/>Выводить&nbsp;:&nbsp;<input type="text" name="os_twi_count" value="<?php echo get_option( 'os_twi_count', '2' ); ?>" /><?
 }
 
+function os_comments($args){
+	extract($args);
+
+	echo $before_widget;
+
+	echo $before_title;
+	echo get_option('os_comments_title');
+	echo $after_title; 
+
+	$count=get_option('os_comments_count');
+
+	$comments=get_comments(array(
+			'number' => $count,
+			// 'orderby' => '',
+			'order' => 'DESC',
+			'status' => 'approve',
+			));
+?>
+<ul>
+	<?php
+	foreach ( $comments as $item ) :
+	?><li>
+	<span class="testimonials_arrow"></span><?php
+	echo wp_trim_words($item->comment_content,20);
+	?><div class="clear"></div>
+	<div class="author"><?php echo $item->comment_author; ?> к '<a href="<?php echo get_permalink($item->comment_post_ID); ?>" ><?php echo get_the_title( $item->comment_post_ID ); ?></a>'</div>
+</li><?php
+	endforeach;
+?>
+</ul>
+<?php
+	echo $after_widget;
+
+}
+function os_comments_control() {
+	if (!empty($_REQUEST['os_comments_title'])) {
+		update_option('os_comments_title', $_REQUEST['os_comments_title']);
+	}
+	if (!empty($_REQUEST['os_comments_source'])) {
+		update_option('os_comments_source', $_REQUEST['os_comments_source']);
+	}
+	if (!empty($_REQUEST['os_comments_count'])) {
+		update_option('os_comments_count', $_REQUEST['os_comments_count']);
+	}
+	?>Заголовок&nbsp;:&nbsp;<input type="text" name="os_comments_title" value="<?php echo get_option( 'os_comments_title', 'Комментарии' ); ?>" /><?
+	?><br/>Выводить&nbsp;:&nbsp;<input type="text" name="os_comments_count" value="<?php echo get_option( 'os_comments_count', '2' ); ?>" /><?
+}
 
 
-
-
-
-
-
-
-
-function os_first_attachment_src($post_ID,$size='large',$attr=''){
+/*
+* получаем SRC картинки поста.
+* если есть миниатюра, берем ее.
+* если нет, ищем первую загруженную картинку.
+* если и ее нет и force=true, отдает заглушку.
+*/
+function os_first_attachment_src($post_ID,$size='large',$force=false){
 	$attachments = get_posts( array(
 		'post_type' => 'attachment',
 		'posts_per_page' => 1,
@@ -287,47 +347,28 @@ function os_first_attachment_src($post_ID,$size='large',$attr=''){
 	) );
 
 	if ( $attachments ) {
-		$img = wp_get_attachment_image_src( $attachments['0']->ID, $size );
-		$out='<img alt="" src="'.$img[0].'" '.$attr.' />';
-	} else {
-		$out='';
-	}
-
-	return $out;
-}
-
-
-function os_force_get_img($post_ID,$size='large',$attr=''){
-	if(has_post_thumbnail($post_ID) ){
-		$out=get_the_post_thumbnail( $post_ID, $size, $attr );
-	} else {
-
-		if(is_array($attr)){ // TODO
-			$out='';
-			foreach ($attr as $key => $value) {
-				if($key=='class')
-					$out.=' '.$value;
-			}
-			$attr=$out;
-		} // TODO //
-
-		$attachments = get_posts( array(
-			'post_type' => 'attachment',
-			'posts_per_page' => 1,
-			'post_parent' => $post_ID
-		) );
-
-		//$attr - array?
-		if ( $attachments ) {
-			$img = wp_get_attachment_image_src( $attachments['0']->ID, $size );
-			$out='<img alt="" src="'.$img[0].'" '.$attr.' />';
+		if(has_post_thumbnail( $post_ID ) ){
+			$out = wp_get_attachment_image_src( get_post_thumbnail_id( $post_ID ), $size );
 		} else {
-			$dummy='<img alt="" src="'.$img_defaults['img'].'" '.$attr.' />';
+			$out = wp_get_attachment_image_src( $attachments['0']->ID, $size );
+		}
+	} else {
+		if($force) {
+			if( $size=='full'){
+				$width='1000';
+				$height='1000';
+			} else {
+				$width=get_option( $size.'_size_w' );
+				$height=get_option( $size.'_size_h' );
+			}
 
-			$out=$dummy;
+			$out[0]='http://fpoimg.com/'.$height.'x'.$width;
+			$out[1]=$width;
+			$out[2]=$height;
+		} else {
+			$out=false;
 		}
 	}
-
 	return $out;
 }
 
@@ -341,3 +382,5 @@ function os_writing_encouragement( $content ) {
 	}
 }
 add_filter( 'default_content', 'os_writing_encouragement' );
+
+

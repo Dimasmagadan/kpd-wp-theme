@@ -15,9 +15,6 @@
 
 	<title><?php wp_title('&laquo;', true, 'right'); ?> <?php bloginfo('name'); ?></title>
 
-	<meta name="description" content="">
-	<meta name="author" content="">
-
 	<meta name="viewport" content="width=device-width">
 
 	<link rel="pingback" href="<?php bloginfo('pingback_url'); ?>" />
@@ -26,11 +23,12 @@
 </head>
 <body <?php body_class(); ?>>
 	<!--[if lt IE 7]>
-		<p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+		<p class="chromeframe">Вы используете устаревший браузер. <a href="http://browsehappy.com/">Обновите браузер сейчас</a> или <a href="http://www.google.com/chromeframe/?redirect=true">установите Chrome Frame</a>.</p>
 	<![endif]-->
 
 	<div id="container">
 		<header role="banner">
-		<h1><a href="<?php echo get_option('home'); ?>/"><?php bloginfo('name'); ?></a></h1>
+		<h1><a href="<?php echo get_option('home'); ?>/"><img src="<?php get_header_image(); ?>" alt=""></a></h1>
+		<!-- <h1><a href="<?php echo get_option('home'); ?>/"><?php bloginfo('name'); ?></a></h1> -->
 		<p class="description"><?php bloginfo('description'); ?></p>
 		</header>
