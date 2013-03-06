@@ -372,6 +372,23 @@ function os_first_attachment_src($post_ID,$size='large',$force=false){
 	return $out;
 }
 
+/*
+* показывает к-во найденного на странице поиска
+*/
+function os_search_results(){
+?><h2 class="pagetitle">Результаты поиска <?php
+$allsearch = &new WP_Query("s=$s&showposts=-1");
+$key = wp_specialchars($s, 1);
+$count = $allsearch->post_count; _e('');
+_e('<span class="search-terms">');
+echo $key; _e('</span>');
+_e(' &mdash; ');
+echo $count . ' ';
+_e('articles');
+wp_reset_query();
+?></h2>
+}
+
 /* --------------- editor's stuff --------------- */
 // Текст по умолчанию, для проверки верстки.
 function os_writing_encouragement( $content ) {

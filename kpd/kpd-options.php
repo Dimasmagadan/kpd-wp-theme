@@ -434,17 +434,17 @@ function register_button($buttons) {
 }  
 
 function add_plugin($plugin_array) {  
-	$plugin_array['adsense_1'] = get_template_directory_uri().'/settings/customcodes.js';  
-	$plugin_array['adsense_2'] = get_template_directory_uri().'/settings/customcodes.js';  
-	$plugin_array['adsense_3'] = get_template_directory_uri().'/settings/customcodes.js';  
-	$plugin_array['adsense_4'] = get_template_directory_uri().'/settings/customcodes.js';  
-	$plugin_array['adsense_5'] = get_template_directory_uri().'/settings/customcodes.js';  
+	$plugin_array['adsense_1'] = get_template_directory_uri().'/kpd/customcodes.js';  
+	$plugin_array['adsense_2'] = get_template_directory_uri().'/kpd/customcodes.js';  
+	$plugin_array['adsense_3'] = get_template_directory_uri().'/kpd/customcodes.js';  
+	$plugin_array['adsense_4'] = get_template_directory_uri().'/kpd/customcodes.js';  
+	$plugin_array['adsense_5'] = get_template_directory_uri().'/kpd/customcodes.js';  
 
-	$plugin_array['yandex_1'] = get_template_directory_uri().'/settings/customcodes.js';  
-	$plugin_array['yandex_2'] = get_template_directory_uri().'/settings/customcodes.js';  
-	$plugin_array['yandex_3'] = get_template_directory_uri().'/settings/customcodes.js';  
-	$plugin_array['yandex_4'] = get_template_directory_uri().'/settings/customcodes.js';  
-	$plugin_array['yandex_5'] = get_template_directory_uri().'/settings/customcodes.js'; 
+	$plugin_array['yandex_1'] = get_template_directory_uri().'/kpd/customcodes.js';  
+	$plugin_array['yandex_2'] = get_template_directory_uri().'/kpd/customcodes.js';  
+	$plugin_array['yandex_3'] = get_template_directory_uri().'/kpd/customcodes.js';  
+	$plugin_array['yandex_4'] = get_template_directory_uri().'/kpd/customcodes.js';  
+	$plugin_array['yandex_5'] = get_template_directory_uri().'/kpd/customcodes.js'; 
 	
 	return $plugin_array;  
 }  
