@@ -386,7 +386,7 @@ _e(' &mdash; ');
 echo $count . ' ';
 _e('articles');
 wp_reset_query();
-?></h2>
+?></h2><?php
 }
 
 /* --------------- editor's stuff --------------- */
