@@ -55,6 +55,21 @@ function os_add_lightboxrel($content) {
 }
 // add_filter('the_content', 'os_add_lightboxrel');
 
+/*
+* ссылка на пост на всех кроме single
+* ссылка на полную картинку на single
+* добавляем  rel="lightbox"
+*/
+function my_post_image_html( $html, $post_id, $post_image_id ) {
+	if(!is_single()){
+		$html = '<a href="' . get_permalink( $post_id ) . '" title="' . esc_attr( get_post_field( 'post_title', $post_id ) ) . '">' . $html . '</a>';
+	} else {
+		$img=wp_get_attachment_image_src( get_post_thumbnail_id( $post_id ), 'full' );
+		$html = '<a href="' . $img[0] . '" rel="lightbox" title="' . esc_attr( get_post_field( 'post_title', $post_id ) ) . '">' . $html . '</a>';
+	}
+	return $html;
+}
+add_filter( 'post_thumbnail_html', 'my_post_image_html', 10, 3 );
 
 
 if ( ! isset( $content_width ) )
