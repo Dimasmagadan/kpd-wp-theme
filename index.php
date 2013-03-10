@@ -8,7 +8,7 @@ get_header(); ?>
 
 <?php
 if(isset($_GET['s'])){
-	os_search_results();
+	os_search_results($_GET['s']);
 } ?>
 
 <div id="main" role="main">

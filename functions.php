@@ -64,7 +64,7 @@ function my_post_image_html( $html, $post_id, $post_image_id ) {
 	if(!is_single()){
 		$html = '<a href="' . get_permalink( $post_id ) . '" title="' . esc_attr( get_post_field( 'post_title', $post_id ) ) . '">' . $html . '</a>';
 	} else {
-		$img=wp_get_attachment_image_src( get_post_thumbnail_id( $post_id ), 'full' );
+		$img=wp_get_attachment_image_src( $post_image_id, 'full' );
 		$html = '<a href="' . $img[0] . '" rel="lightbox" title="' . esc_attr( get_post_field( 'post_title', $post_id ) ) . '">' . $html . '</a>';
 	}
 	return $html;
@@ -390,16 +390,16 @@ function os_first_attachment_src($post_ID,$size='large',$force=false){
 /*
 * показывает к-во найденного на странице поиска
 */
-function os_search_results(){
+function os_search_results($s=NULL){
 ?><h2 class="pagetitle">Результаты поиска <?php
 $allsearch = &new WP_Query("s=$s&showposts=-1");
 $key = wp_specialchars($s, 1);
 $count = $allsearch->post_count; _e('');
 _e('<span class="search-terms">');
 echo $key; _e('</span>');
+_e('Найдено');
 _e(' &mdash; ');
 echo $count . ' ';
-_e('articles');
 wp_reset_query();
 ?></h2><?php
 }
