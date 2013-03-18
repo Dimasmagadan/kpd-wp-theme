@@ -4,7 +4,7 @@
  * @subpackage HTML5_Boilerplate
  */
 
-error_reporting(E_ALL); // dev
+// error_reporting(E_ALL); // dev
 // перед запуском в продакшн заменить $ver=time() у стилей!!!
 
 global $img_defaults;
@@ -29,8 +29,8 @@ add_theme_support( 'post-thumbnails' );
 
 /* =================== картинки ==========================*/
 /* удаляем стандартные размеры, добавляем свои */
-update_option( 'thumbnail_size_h', 0 );
-update_option( 'thumbnail_size_w', 0 );
+update_option( 'thumbnail_size_h', 100 );
+update_option( 'thumbnail_size_w', 100 );
 update_option( 'medium_size_h', 0 );
 update_option( 'medium_size_w', 0 );
 update_option( 'large_size_h', 0 );
@@ -416,3 +416,62 @@ function os_writing_encouragement( $content ) {
 add_filter( 'default_content', 'os_writing_encouragement' );
 
 
+/* check referers */
+function check_referrer() {
+    if (!isset($_SERVER['HTTP_REFERER']) || $_SERVER['HTTP_REFERER'] == “”) {
+        wp_die( __('Please enable referrers in your browser, or, if you\'re a spammer, bugger off!') );
+    }
+}
+add_action('check_comment_flood', 'check_referrer');
+
+
+
+/*
+* breadcrumbs. для плагина партнерки
+*/
+function os_breadcrumb() {
+		echo '<ul id="crumbs" class="bread_crumb clearfix"><li>Вы сейчас тут:</li>';
+		echo '<li><a href="';
+		echo get_option('home');
+		echo '">';
+		echo 'Главная';
+		echo "</a></li>";
+	if (!is_home()) {
+		if (is_category() || is_single() || is_tax() ) {
+			echo '<li class="separator icon_small_arrow right_white">&nbsp;</li><li>';
+			if(get_post_type( )=='ps_catalog' || is_tax() ){
+				echo '<a href="/ps_catalog/">Каталог</a>';
+				echo '</li>';
+				$tax=get_the_terms($post_ID,'ps_category');
+				foreach ($tax as $item) {
+					echo '<li class="separator icon_small_arrow right_white">&nbsp;</li><li><a href="/type/'.$item->slug.'">'.$item->name.'</a></li>';
+				}
+			} else {
+				the_category(' </li><li class="separator icon_small_arrow right_white">&nbsp;</li><li>');
+			}
+			if (is_single()) {
+				echo '</li><li class="separator icon_small_arrow right_white">&nbsp;</li><li>';
+				the_title();
+				echo '</li>';
+			}
+		} elseif (is_page()) {
+			echo '<li class="separator icon_small_arrow right_white">&nbsp;</li><li>';
+			echo the_title();
+			echo '</li>';
+		// } elseif( is_post_type_archive( 'ps_catalog' )) {
+		} elseif( get_query_var( 'post_type' )=='ps_catalog') {
+			echo '<li class="separator icon_small_arrow right_white">&nbsp;</li><li>';
+			echo '<a href="/ps_catalog/">Каталог</a>';
+			echo '</li>';
+		}
+
+	}
+	elseif (is_tag()) {single_tag_title();}
+	elseif (is_day()) {echo '<li class="separator icon_small_arrow right_white">&nbsp;</li><li>Архив за '; the_time('F jS, Y'); echo'</li>';}
+	elseif (is_month()) {echo '<li class="separator icon_small_arrow right_white">&nbsp;</li><li>Архив за '; the_time('F, Y'); echo'</li>';}
+	elseif (is_year()) {echo '<li class="separator icon_small_arrow right_white">&nbsp;</li><li>Архив за '; the_time('Y'); echo'</li>';}
+	elseif (is_author()) {echo '<li class="separator icon_small_arrow right_white">&nbsp;</li><li>Архив автора'; echo'</li>';}
+	elseif (isset($_GET['paged']) && !empty($_GET['paged'])) {echo '<li class="separator icon_small_arrow right_white">&nbsp;</li><li>Архив записей'; echo'</li>';}
+	elseif (is_search()) {echo '<li class="separator icon_small_arrow right_white">&nbsp;</li><li>Результаты поиска'; echo'</li>';}
+	echo '</ul>';
+}
