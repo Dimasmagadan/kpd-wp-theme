@@ -413,7 +413,7 @@ function os_writing_encouragement( $content ) {
 		return $text;
 	}
 }
-add_filter( 'default_content', 'os_writing_encouragement' );
+// add_filter( 'default_content', 'os_writing_encouragement' );
 
 
 /* check referers */
