@@ -80,7 +80,7 @@ include_once ( get_template_directory().'/kpd/kpd-options.php' );
 
 
 function os_enqueue_comments_reply() {
-	if( get_option( 'thread_comments' ) )  {
+	if( get_option( 'thread_comments' ) &&  (is_single() || is_page() ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}
 }
@@ -474,4 +474,43 @@ function os_breadcrumb() {
 	elseif (isset($_GET['paged']) && !empty($_GET['paged'])) {echo '<li class="separator icon_small_arrow right_white">&nbsp;</li><li>Архив записей'; echo'</li>';}
 	elseif (is_search()) {echo '<li class="separator icon_small_arrow right_white">&nbsp;</li><li>Результаты поиска'; echo'</li>';}
 	echo '</ul>';
+}
+
+/*
+Usage:
+	$frag = new CWS_Fragment_Cache( 'unique-key', 3600 ); // Second param is TTL
+	if ( !$frag->output() ) { // NOTE, testing for a return of false
+		functions_that_do_stuff_live();
+		these_should_echo();
+		// IMPORTANT
+		$frag->store();
+		// YOU CANNOT FORGET THIS. If you do, the site will break.
+	}
+*/
+class CWS_Fragment_Cache {
+	const GROUP = 'cws-fragments';
+	var $key;
+	var $ttl;
+
+	public function __construct( $key, $ttl ) {
+		$this->key = $key;
+		$this->ttl = $ttl;
+	}
+
+	public function output() {
+		$output = wp_cache_get( $this->key, self::GROUP );
+		if ( !empty( $output ) ) {
+			// It was in the cache
+			echo $output;
+			return true;
+		} else {
+			ob_start();
+			return false;
+		}
+	}
+
+	public function store() {
+		$output = ob_get_flush(); // Flushes the buffers
+		wp_cache_add( $this->key, $output, self::GROUP, $this->ttl );
+	}
 }
