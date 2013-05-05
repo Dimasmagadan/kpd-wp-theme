@@ -32,3 +32,17 @@
 		<!-- <h1><a href="<?php echo get_option('home'); ?>/"><?php bloginfo('name'); ?></a></h1> -->
 		<p class="description"><?php bloginfo('description'); ?></p>
 		</header>
+			
+<!-- меню без ul и li -->
+<?php
+$menuParameters = array(
+'container'       => false,
+'echo'            => false,
+'items_wrap'      => '%3$s',
+'depth'           => 0,
+);
+
+echo strip_tags(wp_nav_menu( $menuParameters ), '<a>' );
+?>
+
+				
