@@ -5,8 +5,11 @@
  */
 
 // error_reporting(E_ALL); // dev
+// mvimh_log_data_at_hook("identifier");
 // перед запуском в продакшн заменить $ver=time() у стилей!!!
 
+
+// dev
 global $img_defaults;
 // Максимальная ширина контента в пикселях
 $img_defaults['size']=850;
@@ -16,7 +19,7 @@ $img_defaults['logo']='kindajean.png';
 $img_defaults['back']='kindajean.png';
 // картинка-заглушка по умолчанию
 $img_defaults['img']='http://fpoimg.com/100x100';
-
+// dev
 
 
 
@@ -27,6 +30,7 @@ add_theme_support( 'automatic-feed-links' );
 add_theme_support( 'post-thumbnails' );
 
 
+// dev
 /* =================== картинки ==========================*/
 /* удаляем стандартные размеры, добавляем свои */
 update_option( 'thumbnail_size_h', 100 );
@@ -35,6 +39,8 @@ update_option( 'medium_size_h', 0 );
 update_option( 'medium_size_w', 0 );
 update_option( 'large_size_h', 0 );
 update_option( 'large_size_w', 0 );
+// dev
+
 // add_image_size( 'preview', 190, 140);
 // add_image_size( 'long', 850, 9999);
 
@@ -76,7 +82,7 @@ if ( ! isset( $content_width ) )
 	$content_width = $img_defaults['size'];
 
 /* добавляем свою админку */
-include_once ( get_template_directory().'/kpd/kpd-options.php' );
+// include_once ( get_template_directory().'/kpd/kpd-options.php' );
 
 
 function os_enqueue_comments_reply() {
@@ -220,8 +226,10 @@ add_action('admin_head', 'os_adminCSS');
 function register_widgets() {
 	wp_register_sidebar_widget('os_last','KPD Последние записи', 'os_latest');
 	
-	wp_register_sidebar_widget('os_twi','KPD Твиттер', 'os_twitter');
-	wp_register_widget_control('os_twi','KPD Твиттер', 'os_twi_control');
+	// TODO
+	// old api
+	// wp_register_sidebar_widget('os_twi','KPD Твиттер', 'os_twitter');
+	// wp_register_widget_control('os_twi','KPD Твиттер', 'os_twi_control');
 
 	wp_register_sidebar_widget('os_comments','KPD комментарии', 'os_comments');
 	wp_register_widget_control('os_comments','KPD комментарии', 'os_comments_control' );
@@ -266,6 +274,7 @@ function os_latest($args){
 function os_return_time( $seconds ) {
 	return 7200;
 }
+/*
 function os_twitter($args){
 	extract($args);
 
@@ -317,6 +326,7 @@ function os_twi_control() {
 	?><br/>Аккаунт&nbsp;:&nbsp;<input type="text" name="os_twi_source" value="<?php echo get_option( 'os_twi_source', 'HOMECREDIT_BANK' ); ?>" /><?
 	?><br/>Выводить&nbsp;:&nbsp;<input type="text" name="os_twi_count" value="<?php echo get_option( 'os_twi_count', '2' ); ?>" /><?
 }
+*/
 
 function os_comments($args){
 	extract($args);
@@ -367,12 +377,14 @@ function os_comments_control() {
 }
 
 
+//todo
+//get_attached_media
 /*
 * получаем SRC картинки поста.
 * если есть миниатюра, берем ее.
 * если нет, ищем первую загруженную картинку.
 * если и ее нет и force=true, отдает заглушку.
-*/
+* /
 function os_first_attachment_src($post_ID,$size='large',$force=false){
 	$attachments = get_posts( array(
 		'post_type' => 'attachment',
@@ -405,22 +417,23 @@ function os_first_attachment_src($post_ID,$size='large',$force=false){
 	}
 	return $out;
 }
+*/
 
 /*
 * показывает к-во найденного на странице поиска
 */
 function os_search_results($s=NULL){
-?><h2 class="pagetitle">Результаты поиска <?php
-$allsearch = &new WP_Query("s=$s&showposts=-1");
-$key = wp_specialchars($s, 1);
-$count = $allsearch->post_count; _e('');
-_e('<span class="search-terms">');
-echo $key; _e('</span>');
-_e('Найдено');
-_e(' &mdash; ');
-echo $count . ' ';
-wp_reset_query();
-?></h2><?php
+	?><h2 class="pagetitle">Результаты поиска <?php
+	$allsearch = &new WP_Query("s=$s&showposts=-1");
+	$key = wp_specialchars($s, 1);
+	$count = $allsearch->post_count; _e('');
+	_e('<span class="search-terms">');
+	echo $key; _e('</span>');
+	_e('Найдено');
+	_e(' &mdash; ');
+	echo $count . ' ';
+	wp_reset_query();
+	?></h2><?php
 }
 
 /* --------------- editor's stuff --------------- */
@@ -542,3 +555,9 @@ class CWS_Fragment_Cache {
 		wp_cache_add( $this->key, $output, self::GROUP, $this->ttl );
 	}
 }
+
+// hide dashboard for users
+// if ( ! current_user_can( 'manage_options' ) ) {
+// 	show_admin_bar( false );
+// }
+
