@@ -453,7 +453,7 @@ function os_writing_encouragement( $content ) {
 
 /* check referers */
 function check_referrer() {
-    if (!isset($_SERVER['HTTP_REFERER']) || $_SERVER['HTTP_REFERER'] == “”) {
+    if (!isset($_SERVER['HTTP_REFERER']) || $_SERVER['HTTP_REFERER'] == "") {
         wp_die( __('Please enable referrers in your browser, or, if you\'re a spammer, bugger off!') );
     }
 }
