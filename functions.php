@@ -170,8 +170,8 @@ add_theme_support( 'custom-header', $defaults );
 
 
 register_nav_menus( array(
-	'header' => __( 'Основное меню', 'header' ),
-	'footer' => __( 'Нижнее меню', 'footer' ),
+	'top' => 'top',
+	'footer' => 'footer',
 ) );
 
 /* отключаем стили и скрипты плагинов для остальных страниц */
