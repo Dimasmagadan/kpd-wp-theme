@@ -1,13 +1,13 @@
-jQuery(document).ready(function(e) {
+jQuery(document).ready(function($){
 
-	// jQuery('a[rel="lightbox"]').magnificPopup({
+	// $('a[rel="lightbox"]').magnificPopup({
 	// 	gallery: {
 	// 		enabled: true
 	// 	},
 	// 	type: 'image'
 	// });
 
-	jQuery('a[rel="lightbox"]').magnificPopup({
+	$('a[rel="lightbox"]').magnificPopup({
 		tClose: 'Закрыть (Esc)',
 		tLoading: 'Загрузка...',
 		image: {
