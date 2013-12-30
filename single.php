@@ -1,10 +1,4 @@
-<?php
-/**
- * @package WordPress
- * @subpackage HTML5_Boilerplate
- */
-
-get_header(); ?>
+<?php get_header(); ?>
 
 <div id="main" role="main">
 
@@ -22,6 +16,7 @@ get_header(); ?>
 			<time datetime="<?php the_time('Y-m-d')?>"><?php the_time('l, F jS, Y') ?></time>
 			<time><?php the_time() ?></time>
 			в рубрике <?php the_category(', ') ?>.
+			
 			Подписаться на <?php post_comments_feed_link('RSS 2.0'); ?>.
 
 			<?php if ( comments_open() && pings_open() ) {

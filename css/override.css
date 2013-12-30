@@ -1,3 +1,8 @@
+/* remove for site speed, keep for coding comfort */
+* {
+	background-repeat:no-repeat;
+}
+
 a:hover, a{
     transition: color 0.3s  linear;
 }

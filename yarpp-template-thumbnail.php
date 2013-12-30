@@ -13,7 +13,7 @@ Author: mitcho (Michael Yoshitaka Erlewine)
 	<div class="product-box grid_2">
 		<div class="prod-thumb">
 			<a href="<?php the_permalink() ?>">
-				<?php echo os_force_get_img($post->ID,array(120,120),array('class'=>'img-related')); ?>
+				<?php // echo os_force_get_img($post->ID,array(120,120),array('class'=>'img-related')); ?>
 			</a>
 		</div>
 		<div class="prod-info">
