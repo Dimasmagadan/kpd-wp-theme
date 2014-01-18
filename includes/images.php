@@ -5,6 +5,21 @@
 // add_image_size( 'long', 850, 9999);
 
 /**
+* Stop WordPress from Creating Multiple copies of Images
+*
+* @author Noumaan Yaqoob
+* @link http://wplift.com/wordpress-better-image-handling-tips
+*/
+function wplift_remove_image_sizes( $sizes) {
+	unset( $sizes['thumbnail']);
+	unset( $sizes['medium']);
+	unset( $sizes['large']);
+
+	return $sizes;
+}
+// add_filter('intermediate_image_sizes_advanced', 'wplift_remove_image_sizes');
+
+/**
 * Add additional image sizes to the WordPress media upload/insert interface
 *
 * @author Daniel Roizer
