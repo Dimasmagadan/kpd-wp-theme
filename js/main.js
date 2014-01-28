@@ -4,6 +4,16 @@
 	$(function() {
 		$(document).ready(function(){
 
+			// quick fix - if no featured images used
+			// if($('.archive').length){
+			// 	$.each( $('article a img'), function( i, e ) {
+			// 		$(e).parent().attr({
+			// 			'href': $(e).parents('article').find('h3 a').attr('href'),
+			// 			'rel': 'bookmark'
+			// 		});
+			// 	});
+			// }
+
 			//$('a[rel="lightbox"]').magnificPopup({
 			//	gallery: {
 			//		enabled: true
