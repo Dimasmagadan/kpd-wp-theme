@@ -26,6 +26,14 @@ function mytheme_comment($comment, $args, $depth) {
 <?php
 }
 
+/**
+* http://www.paulund.co.uk/add-relnofollow-to-wordpress-comment-reply-links
+* Add a rel="nofollow" to the comment reply links
+*/
+function add_nofollow_to_reply_link( $link ) {
+    return str_replace( '")\'>', '")\' rel=\'nofollow\'>', $link );
+}
+add_filter( 'comment_reply_link', 'add_nofollow_to_reply_link' );
 
 /* check referers */
 function check_referrer() {
