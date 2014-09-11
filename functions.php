@@ -30,6 +30,9 @@ function os_styles_and_scripts() {
 	// овверайд премиум темы. без child-theme
 	// wp_enqueue_style( 'override', get_template_directory_uri().'/css/override.css', false, $ver );
 
+	// sccs
+	// wp_enqueue_style( 'style', get_template_directory_uri().'/css/style.css', null, $ver );
+
 	wp_enqueue_script( 'modernizr', get_template_directory_uri() . '/js/modernizr-2.6.2.min.js', null, '2.5.2', false );
 
 	wp_enqueue_script( 'yashare', '//yandex.st/share/share.js', null, '1', true );
