@@ -1,3 +1,9 @@
+<?php
+/**
+ * Template Name: Page Template
+ *
+ */
+?>
 <?php get_header(); ?>
 
 <div id="main" role="main">
