@@ -22,18 +22,18 @@
 			//});
 
 			$('a[rel="lightbox"]').magnificPopup({
-				tClose: 'Закрыть (Esc)',
-				tLoading: 'Загрузка...',
+				tClose: os.tClose,
+				tLoading: os.tLoading,
 				image: {
-					tError: '<a href="%url%">ссылку</a> загрузить не вышло.'
+					tError: os.tError
 				},
 				ajax: {
-					tError: '<a href="%url%">ссылку</a> загрузить не вышло.'
+					tError: os.tError
 				},
 				gallery: {
-					tPrev: 'Туда (влево)',
-					tNext: 'Сюда (вправо)',
-					tCounter: '%curr% из %total%',
+					tPrev: os.tPrev,
+					tNext: os.tNext,
+					tCounter: os.tCounter,
 					enabled: true
 				},
 				zoom: {

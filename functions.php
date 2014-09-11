@@ -43,7 +43,14 @@ function os_styles_and_scripts() {
 
 	wp_localize_script('main','os',array(
 		'ajaxurl'=>admin_url('admin-ajax.php'),
-		'base'=>site_url() )
+		'base'=>site_url(),
+		'tClose'=> __('Close (Esc)','text_domain'),
+		'tLoading'=> __('Loading...','text_domain'),
+		'tError'=> __('Unable to load <a href="%url%">link</a>.','text_domain'),
+		'tPrev'=> __('Previous (left)','text_domain'),
+		'tNext'=> __('Next (right)','text_domain'),
+		'tCounter'=> __('%curr% from %total%','text_domain')
+		)
 	);
 }
 add_action( 'wp_enqueue_scripts', 'os_styles_and_scripts' );
