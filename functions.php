@@ -69,6 +69,7 @@ include 'includes/images.php';
 include 'includes/posts.php';
 include 'includes/shortcodes.php';
 include 'includes/users.php';
+include 'includes/meta.php';
 // include 'includes/widgets.php';
 
 include 'includes/current-theme.php';
