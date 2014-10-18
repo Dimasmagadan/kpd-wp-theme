@@ -26,6 +26,7 @@ output_style = :compact
 # sass-convert -R --from scss --to sass scss scss && rm -rf sass && mv scss sass
 
 require 'autoprefixer-rails'
+require 'compass-normalize'
 
 on_stylesheet_saved do |file|
   css = File.read(file)
