@@ -1,13 +1,22 @@
+@import "compass/css3";
+@import "compass/utilities/sprites";
+$icons-layout: smart;
+$icons-spacing: 2px;
+@import "icons/*.png";
+
+
+@mixin icon($i) {
+  width: image-width('/icons/' + $i + ".png");
+  height: image-height('/icons/' + $i + ".png");
+  @include inline-block;
+  @include icons-sprite($i);
+}
+
+@import "_normalize";
 @import 'normalize';
-@import 'helpers';
-
-// code
-
-// lightbox
 // @import 'magnific-popup';
 // slider
 // @import 'slick';
 
-
-@import 'media';
-@import 'print';
+@import "_common";
+// @import 'helpers';
