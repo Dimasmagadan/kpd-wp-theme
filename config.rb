@@ -1,4 +1,4 @@
-# require 'compass/import-once/activate'
+require 'compass/import-once/activate'
 # Require any additional compass plugins here.
 
 # Set this to the root of your project when deployed:
@@ -25,8 +25,8 @@ output_style = :compact
 # and then run:
 # sass-convert -R --from scss --to sass scss scss && rm -rf sass && mv scss sass
 
-require 'autoprefixer-rails'
 require 'compass-normalize'
+require 'autoprefixer-rails'
 
 on_stylesheet_saved do |file|
   css = File.read(file)
