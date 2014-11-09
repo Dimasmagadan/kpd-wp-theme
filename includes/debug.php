@@ -24,3 +24,11 @@ function de($a, $force = false){
         echo '</pre>';
     }
 }
+
+function deb($a, $name = false){
+    if(function_exists('dbgx_trace_var')){
+        dbgx_trace_var($a, $name);
+    } else {
+        de($a);
+    }
+}
