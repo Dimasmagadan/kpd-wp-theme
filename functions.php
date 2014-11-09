@@ -74,3 +74,6 @@ include 'includes/meta.php';
 
 include 'includes/current-theme.php';
 
+if ( defined('WP_CLI') && WP_CLI ) {
+	include 'includes/wp-cli.php';
+}
