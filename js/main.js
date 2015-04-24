@@ -1,7 +1,6 @@
 (function( $ ) {
 	"use strict";
  
-	$(function() {
 		$(document).ready(function(){
 
 			// quick fix - if no featured images used
@@ -49,6 +48,5 @@
 			});
 
 		});
-	});
  
 }(jQuery));
